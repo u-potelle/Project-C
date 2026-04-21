@@ -1,3 +1,4 @@
 gcc -I include main.c src/*.c -o build/app -lreadline
-
-exec ./build/app
+cd build
+exec ./app
+cd ../
