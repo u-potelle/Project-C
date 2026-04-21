@@ -82,7 +82,7 @@ int Menu_Find_Complex_Commands(cJSON *json, cJSON *heros, int *HerosNumber){
         }
         else if (strsame(input, "ouvrir")){
             /* NOTE : le résultat est ignoré ici — à améliorer si besoin */
-            loadJson(readline("chemin du fichier à ouvrir\t->"));
+            heros = loadJson(readline("chemin du fichier à ouvrir\t->"));
         }
         else if (strsame(input, "quitter")){
             return 0;
