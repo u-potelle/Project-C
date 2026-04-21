@@ -95,8 +95,9 @@ void PrintHelp(const cJSON *json){
 }
 
 void printExternalLinks(void){
+
     printf("╔══════════════════════════════════════════════════════════════╗\n");
-    printf("║           RESSOURCES EXTERNES - SUPER-HEROS                 ║\n");
+    printf("║           RESSOURCES EXTERNES - SUPER-HEROS                  ║\n");
     printf("╠══════════════════════════════════════════════════════════════╣\n");
     printf("║ [1] Wikipedia - Super-heros                                  ║\n");
     printf("║     https://fr.wikipedia.org/wiki/Super-h%%C3%%A9ros           ║\n");
@@ -105,20 +106,20 @@ void printExternalLinks(void){
     printf("║     https://fr.vikidia.org/wiki/Superh%%C3%%A9ros              ║\n");
     printf("║                                                              ║\n");
     printf("║ [3] Wikipedia - La Legion des super-heros                    ║\n");
-    printf("║     https://fr.wikipedia.org/wiki/La_L%%C3%%A9gion_des_         ║\n");
-    printf("║     super-h%%C3%%A9ros                                          ║\n");
+    printf("║     https://fr.wikipedia.org/wiki/La_L%%C3%%A9gion_des_        ║\n");
+    printf("║     super-h%%C3%%A9ros                                         ║\n");
     printf("║                                                              ║\n");
     printf("║ [4] Wikipedia - Puissants Vengeurs                           ║\n");
     printf("║     https://fr.wikipedia.org/wiki/Puissants_Vengeurs         ║\n");
     printf("║                                                              ║\n");
     printf("║ [5] Wiktionnaire - Définition super-heros                    ║\n");
-    printf("║     https://fr.wiktionary.org/wiki/super-h%%C3%%A9ros           ║\n");
+    printf("║     https://fr.wiktionary.org/wiki/super-h%%C3%%A9ros          ║\n");
     printf("║                                                              ║\n");
     printf("║ [6] Alucare - Liste complète des super-heros                 ║\n");
     printf("║     https://www.alucare.fr/la-liste-complete-des-super-      ║\n");
     printf("║     heros/                                                   ║\n");
     printf("║                                                              ║\n");
     printf("║ [7] YouTube - Vidéo super-heros                              ║\n");
-    printf("║     https://youtu.be/kLo_t7RI9pE?si=3_wOoBfD5TNC-km7        ║\n");
+    printf("║     https://youtu.be/kLo_t7RI9pE?si=3_wOoBfD5TNC-km7         ║\n");
     printf("╚══════════════════════════════════════════════════════════════╝\n");
 }
