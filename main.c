@@ -6,8 +6,7 @@
  * puis lance la boucle du menu principal.
  *
  * Compilation (exemple) :
- *   gcc main.c utils.c json_io.c display.c filter.c menus.c cJSON.c \
- *       -lreadline -lm -o superheros
+ *   gcc -I include main.c src/*.c -o build/app -lreadline
  */
 
 #include <stdio.h>
