@@ -24,14 +24,13 @@ int Menu_Find_Complex_Commands(cJSON *json, cJSON *heros, int *HerosNumber){
             PrintHelp(cJSON_GetArrayItem(heros, 0));
         }
         else if (strsame(input, "filtre")){
-            printf("retire les héros quand la condition est vraie\n");
             char *elm = readline("champ à filtrer\t\t-> ");
             char op   = readline("opération ( =, >, < )\t-> ")[0];
             int  nb   = atoi(readline("nombre\t\t\t-> "));
             int i = 0;
             printf("\n");
             while (i < *HerosNumber){
-                if (Menu_Find_Complex_filter(cJSON_GetArrayItem(heros, i), elm, op, nb) == 0){
+                if (Menu_Find_Complex_filter(cJSON_GetArrayItem(heros, i), elm, op, nb) == 1){
                     printf("suppression de %s\n",
                         cJSON_GetObjectItem(cJSON_GetArrayItem(heros, i), "name")->valuestring);
                     cJSON_DeleteItemFromArray(heros, i);
@@ -114,6 +113,7 @@ int Menu_Find_Complex(cJSON *json){
 }
 
 int Menu_Find_ByName(const cJSON *json){
+    clear();
     printf("\n--------------------------\n");
     printf("Recherche par nom\n");
     char *choix = readline("nom du héros -> ");
@@ -124,6 +124,7 @@ int Menu_Find_ByName(const cJSON *json){
     }
     printf("le héros '%s' est à l'indice %d\n\n", choix, id);
     printHeroInfoFull(json, id);
+    readline("appuyez sur entrée pour continuer-> ");
     return 0;
 }
 
