@@ -155,7 +155,7 @@ int Menu_Find_ByName(const cJSON *json) {
     int id = findByName(json,choice);
     printf("le hero appelé %s est le numero %d\n\n",choice,id);
     printHeroInfoFull(json,id);
-
+    readline("press any key to continue-> ");
 }
 
 int FindJsonValueElm(const cJSON *json,char* elm){
@@ -209,6 +209,45 @@ int Menu_Find_Complex_filter(cJSON *json,char* elm,char op,int number){
     }
     return 1;
 }
+
+
+cJSON* loadJson(char *path){
+    FILE *fp = fopen(path, "r");
+    if (fp == NULL){
+        printf("Error: Unable to open '%s'\n", path);
+        return NULL;
+    }
+
+
+    fseek(fp, 0, SEEK_END);
+    long fsize = ftell(fp);
+    rewind(fp);
+
+    char *buffer = malloc(fsize + 1);
+    if (buffer == NULL){
+        printf("Error: malloc failed\n");
+        fclose(fp);
+        return NULL;
+    }
+
+
+    fread(buffer, 1, fsize, fp);
+    buffer[fsize] = '\0'; // termine la string
+    fclose(fp);
+
+    cJSON *json = cJSON_Parse(buffer);
+    free(buffer);
+
+    if (json == NULL){
+        const char *error = cJSON_GetErrorPtr();
+        if (error != NULL){
+            printf("Error parsing JSON near: %s\n", error);
+        }
+        return NULL;
+    }
+    return json;
+}
+
 
 int stradd(const char *str1,const char *str2,char *str3){
     int len1 = strlen(str1);
@@ -280,7 +319,7 @@ int Menu_Find_Complex_Commands(cJSON *json,cJSON *heros,int *HerosNumber) {
     }
     //if the user want to filter we get the element ot filter ,the operation and the number to compare 
     else if (strsame(input,"filter")){
-        printf("retire les élément quand vrai");
+        printf("retire les élément quand vrai\n");
         char *elm = readline("élément a filtré \t-> ");
         char op = readline("opération ( =,>,< )\t-> ")[0];
         int nb = atoi(readline("nombre\t\t-> "));
@@ -288,7 +327,7 @@ int Menu_Find_Complex_Commands(cJSON *json,cJSON *heros,int *HerosNumber) {
         int i = 0;
         printf("\n");
         while (i < *HerosNumber){
-            if (Menu_Find_Complex_filter(cJSON_GetArrayItem(heros,i),elm,op,nb)==0){
+            if (Menu_Find_Complex_filter(cJSON_GetArrayItem(heros,i),elm,op,nb)==1){
                 printf("removing %s \n",cJSON_GetObjectItem(cJSON_GetArrayItem(heros,i),"name")->valuestring);
                 cJSON_DeleteItemFromArray(heros,i);
                 *HerosNumber -= 1;
@@ -345,8 +384,11 @@ int Menu_Find_Complex_Commands(cJSON *json,cJSON *heros,int *HerosNumber) {
     //if the user say save we call the save function
     else if (strsame(input,"save")){
         printf("\nsaving...\n\n");
-        saveJson(heros,"./build/favorite.json");
+        saveJson(heros,readline("path of the saved file :"));
 
+    }
+    else if (strsame(input,"open")){
+        heros = loadJson(readline("path :"));
     }
     //if user say exit we return 0 to exit the function
     else if (strsame(input,"exit")){
@@ -363,7 +405,7 @@ int Menu_Find_Complex(cJSON *json) {
     clear();
     printf("--------------------------\n");
     printf("type by what you want to filter\n");
-    printf("(commands - help filter addByName save list exit )\n\n");
+    printf("(commands - help filter delByName addByName save open list exit )\n\n");
     cJSON *heros = cJSON_CreateArray();
     int HerosNumber = cJSON_GetArraySize(json);
     int herosValidate[HerosNumber];
@@ -381,8 +423,7 @@ int Menu_Find_Complex(cJSON *json) {
     Menu_Find_Complex_Commands(json,heros,&HerosNumber);
 
     //after all clear the resulting json from memory
-    cJSON_Delete(heros);
-    free(heros);
+    cJSON_free(heros);
 }
 
 int Menu_Find(cJSON *json) {
@@ -539,7 +580,6 @@ int QuizzMenu(cJSON *json){
     int randomHint = rand() % propNum;
     int hints = 1;
     printf("find hero name in the less hints possible \n");
-    printf("hero : %d\n",heroId);
     while (hints<13){
 
         while (propUsed[randomHint] != 0){
@@ -567,6 +607,36 @@ int QuizzMenu(cJSON *json){
     return 0;
 }
 
+int LinkMenu(){
+    printf("╔══════════════════════════════════════════════════════════════╗\n");
+    printf("║              RESSOURCES EXTERNES - SUPER-HEROS               ║\n");
+    printf("╠══════════════════════════════════════════════════════════════╣\n");
+    printf("║  [1] Wikipedia - Super-heros (FR)                            ║\n");
+    printf("║      https://fr.wikipedia.org/wiki/Super-h%%C3%%A9ros          ║\n");
+    printf("║                                                              ║\n");
+    printf("║  [2] Vikidia - Superheros                                    ║\n");
+    printf("║      https://fr.vikidia.org/wiki/Superh%%C3%%A9ros             ║\n");
+    printf("║                                                              ║\n");
+    printf("║  [3] Wikipedia - La Legion des super-heros                   ║\n");
+    printf("║      https://fr.wikipedia.org/wiki/La_L%%C3%%A9gion_des_       ║\n");
+    printf("║      super-h%%C3%%A9ros                                        ║\n");
+    printf("║                                                              ║\n");
+    printf("║  [4] Wikipedia - Puissants Vengeurs                          ║\n");
+    printf("║      https://fr.wikipedia.org/wiki/Puissants_Vengeurs        ║\n");
+    printf("║                                                              ║\n");
+    printf("║  [5] Wiktionary - Definition super-heros                     ║\n");
+    printf("║      https://fr.wiktionary.org/wiki/super-h%%C3%%A9ros         ║\n");
+    printf("║                                                              ║\n");
+    printf("║  [6] Alucare - Liste complete des super-heros                ║\n");
+    printf("║      https://www.alucare.fr/la-liste-complete-des-super-     ║\n");
+    printf("║      heros/                                                  ║\n");
+    printf("║                                                              ║\n");
+    printf("║  [7] YouTube - Video super-heros                             ║\n");
+    printf("║      https://youtu.be/kLo_t7RI9pE?si=3_wOoBfD5TNC-km7        ║\n");
+    printf("╚══════════════════════════════════════════════════════════════╝\n");
+    readline("press any key to continue-> ");
+}
+
 int Menu(cJSON *json) {
     char choice;
         printf("+-------------------------------+\n");
@@ -575,7 +645,8 @@ int Menu(cJSON *json) {
         printf("|2-recherche\t\t\t|\n");
         printf("|3-comparaison\t\t\t|\n");
         printf("|4-quizz\t\t\t|\n");
-        printf("|5-exit\t\t\t\t|\n");
+        printf("|5-resource\t\t\t|\n");
+        printf("|6-quitter\t\t\t|\n");
         printf("+-------------------------------+\n");
         printf("\n");
 
@@ -611,6 +682,10 @@ int Menu(cJSON *json) {
             break;
             case 5:
                 clear();
+                LinkMenu();
+            break;
+            case 6:
+                clear();
                 return 0;
             break;
         
@@ -620,32 +695,14 @@ int Menu(cJSON *json) {
 
 int main(void) {
     srand( time( NULL ) );
-    FILE *fp = fopen("./build/SuperHeros.json", "r");
-    if (fp == NULL) {printf("Error: Unable to open the file.\n");return -1;}
-    char buffer[(int)pow(2,14)];
-    fread(buffer, 1, sizeof(buffer), fp);
-    fclose(fp);
-    //#define json cJSON_Parse(buffer)
-    cJSON *json = cJSON_Parse(buffer);
+    cJSON *json = loadJson("./json/SuperHeros.json");
+    if (json == NULL){ return -1; }
+
     while (Menu(json))
     {
         clear();
     }
     
-    /*cJSON *json2 = cJSON_CreateObject();
-    cJSON_AddStringToObject(json2, "name", "John Doe");
-    cJSON_AddNumberToObject(json2, "age", 30);
-    cJSON_AddStringToObject(json2, "email", "john.doe@example.com");
-
-    char *json_str = cJSON_Print(json);
-
-    FILE *fp2 = fopen("../data.json", "w");
-    if (fp2 == NULL) {
-        printf("Error: Unable to open the file.\n");
-        return 1;
-    }
-    if (json_str != NULL){printf("\n\nfile not null -> creating data.json");fputs(json_str, fp2);}
-    */
     cJSON_free(json);
     return 0;
 }
