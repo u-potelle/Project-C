@@ -14,13 +14,17 @@
 //library json-parser https://github.com/json-parser/json-parser
 #include "cJSON.h"
 
-#if _WIN32 || _WIN64
+#if defined(_WIN32) || defined(_WIN64)
 void clear(){
     system("cls");
 }
-#elif __linux__
+#elif defined(__linux__)
 void clear(){
     system("clear");
+}
+#else
+void clear(){
+    printf("\n-------------------------\n")
 }
 #endif
 
@@ -267,30 +271,14 @@ int stradd(const char *str1,const char *str2,char *str3){
 
 void PrintHelp(const cJSON *json){
 
-
-    if (cJSON_IsArray(json)){
-        for (int i = 0 ; i < cJSON_GetArraySize(json);i++){
-            PrintHelp(cJSON_GetArrayItem(json,i));
-        }
-    }
-
-
-    if (cJSON_IsObject(json)){
-        for (int i = 0 ; i < cJSON_GetArraySize(json);i++){
-            cJSON *element = cJSON_GetArrayItem(json,i);
-
-            if (cJSON_IsArray(json)){
-                for (int i = 0 ; i < cJSON_GetArraySize(json);i++){
-                    PrintHelp(cJSON_GetArrayItem(json,i));
-                }
-                }
-            else if (!cJSON_IsNull(element)){
-
-                printf(" - %s\n",element->string);
-            }
-        }
-    }
-
+    printf("id\n");
+    printf("id-api\n");
+    printf("intelligence\n");
+    printf("strength\n");
+    printf("speed\n");
+    printf("durability\n");
+    printf("power\n");
+    printf("combat\n");
 
 }
 
@@ -305,6 +293,7 @@ int saveJson(cJSON *json,char *path){
     fprintf(fp2, json_str);
     printf("saved\n");
     fclose(fp2);
+    free(json_str);
     return 0;
 }
 
@@ -578,12 +567,14 @@ int QuizzMenu(cJSON *json){
     //set all hints to be not used
     for(int i=0;i<propNum;i++){propUsed[i]=0;}
     int randomHint = rand() % propNum;
-    int hints = 1;
+    int hints = 0;
     printf("find hero name in the less hints possible \n");
-    while (hints<13){
+    while (hints<12){
 
+        
         while (propUsed[randomHint] != 0){
             randomHint = rand() % propNum;
+            
         }
         propUsed[randomHint] = 1;
         hints++;
@@ -599,11 +590,13 @@ int QuizzMenu(cJSON *json){
         
     }
     if (win){
-        printf("bravo le heros était bien %s\n",guess);
+        printf("bravo le heros était bien %s, trouvé en %d hints\n",guess,guess);
     }
     else{
         printf("le heros était %s\n",FindJsonStrElm(hero,"name"));
     }
+    free(propUsed);
+    cJSON_free(hero);
     return 0;
 }
 
